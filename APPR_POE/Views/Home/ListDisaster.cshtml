@@ -1,0 +1,46 @@
+﻿@model System.Data.DataTable
+@using System.Data
+
+@{
+    ViewBag.Title = "Disaster List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2 class="text-center mt-5">Disaster List</h2>
+    <div class="mb-4">
+        <a href="/Home/AddDisaster" class="btn btn-success">Add to Donation</a>
+    </div>
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Emails</th>
+                    <th scope="col">Start_date</th>
+                    <th scope="col">End_date</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Aid_types</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow row in Model.Rows)
+                {
+                    <tr>
+                        <td>@row["Emails"]</td>
+                        <td>@row["Start_date"]</td>
+                        <td>@row["End_date"]</td>
+                        <td>@row["Location"]</td>
+                        <td>@row["Description"]</td>
+                        <td>@row["Aid_types"]</td>
+                        <td>
+                            <a href="@Url.Action("Edit", new { id = row["DisasterID"] })" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="@Url.Action("Details", new { id = row["DisasterID"] })" class="btn btn-info btn-sm">Details</a>
+                            <a href="@Url.Action("Delete", new { id = row["DisasterID"] })" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

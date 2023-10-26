@@ -1,0 +1,48 @@
+﻿@model System.Data.DataTable
+@using System.Data
+
+@{
+    ViewBag.Title = "Monetary List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+    <div class="container">
+        <h2 class="text-center mt-5">Monetary Donations List</h2>
+        <div class="mb-4">
+            <a href="/Home/MonetaryDonations" class="btn btn-success">Add to Donation</a>
+        </div>
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Emails</th>
+                        <th scope="col">DonatorName</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow row in Model.Rows)
+                    {
+                        <tr>
+                            <td>@row["Emails"]</td>
+                            <td>@row["DonatorName"]</td>
+                            <td>@row["Date"]</td>
+                            <td>@row["Amount"]</td>
+                            <td>
+                                <a href="@Url.Action("EditMonetary",  new { id = row["MonetaryId"] })" class="btn btn-primary btn-sm">Edit</a>
+                                <a href="@Url.Action("MonentaryDeatils", new { id = row["MonetaryId"] })" class="btn btn-info btn-sm">Details</a>
+                                <a href="@Url.Action("DeletMonetary", new { id = row["MonetaryId"] })" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+           
+
+        </div>
+        <!---------------  SCRIPT  --------------------->
+        <script src="/css/script.js"></script>
+    </div>

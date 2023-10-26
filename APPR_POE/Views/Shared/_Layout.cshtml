@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/style/style.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:orange;">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" title="more options">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav" style="float:right !important">
+                    @if (Session["Emails"] != null)
+                    {
+                        <li><p style="color:#ffffff; margin-top:15px">Hello @Session["Email"]</p></li>
+                        <li>@Html.ActionLink("Log Out", "LogOut", "Home")</li>
+
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("Sign Up", "SignUp", "Home")</li>
+                        <li>@Html.ActionLink("Log In", "Login", "Home")</li>
+                    }
+                </ul>
+                <ul class="nav navbar-nav" style="float:left !important">
+                    @if (Session["Email"] != null)
+                    {
+                        <li>@Html.ActionLink("MonetaryDonations", "MonetaryList", "Home")</li>
+                        <li>@Html.ActionLink("GoodDonations", "GoodList", "Home")</li>
+                        <li>@Html.ActionLink("DisasterDonations", "ListDisaster", "Home")</li>
+
+                    }
+                    else
+                    {
+                       <!----> 
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content" style="background-color:purple;">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Application</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

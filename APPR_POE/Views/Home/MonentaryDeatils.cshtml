@@ -1,0 +1,59 @@
+﻿@model APPR_part1.Models.MonentaryDonations
+
+@{
+    ViewBag.Title = "MonentaryDeatils";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>MonentaryDeatils</h2>
+
+<div>
+    <h4>MonetaryDonation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MonetaryId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MonetaryId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Emails)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Emails)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DonatorName )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DonatorName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

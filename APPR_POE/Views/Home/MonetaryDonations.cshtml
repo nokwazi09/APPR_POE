@@ -1,0 +1,132 @@
+﻿
+@{
+    ViewBag.Title = "Monetary Donations";
+    Layout = "~/Views/_LayoutPage1.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: mediumpurple;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: orange;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        label.radio-label {
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        label.radio-label:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        #DonatorName {
+            display: none;
+        }
+
+        .form-group button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>@ViewBag.Title</h2>
+        <form action="MonetaryDonations" method="post">
+            <div class="form-group">
+                <input type="radio" class="custom-radio" id="radio1" name="DonatorName" value="Anonymous">
+                <label class="radio-label" for="radio1">Anonymous</label>
+                <label class="radio-label" for="DonatorName" id="donatorNameLabel">Not Anonymous</label>
+                <input type="text" id="DonatorName" name="DonatorName" placeholder="Donator Name">
+            </div>
+            <div class="form-group">
+                <label for="Date">Date:</label>
+                <input type="date" id="Date" name="Date" required>
+            </div>
+            <div class="form-group">
+                <label for="Amount">Amount:</label>
+                <input type="number" id="Amount" name="Amount" placeholder="Amount" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Add Donation</button>
+            </div>
+            <div>
+                @(TempData["Message"] as string)
+            </div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('radio1').addEventListener('change', function () {
+            var donatorNameInput = document.getElementById('DonatorName');
+            var donatorNameLabel = document.getElementById('donatorNameLabel');
+            if (this.checked) {
+                donatorNameInput.style.display = 'none';
+                donatorNameLabel.style.display = 'inline-block';
+            }
+        });
+    </script>
+</body>
+</html>
+
