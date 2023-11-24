@@ -14,6 +14,11 @@ namespace APPR_POE.Models
     
     public partial class GoodDonation
     {
+        public GoodDonation()
+        {
+            AllocateGoods = new HashSet<AllocateGood>();
+            PurchaseGoods = new HashSet<PurchaseGood>();
+        }
         public int GoodId { get; set; }
         public string Email { get; set; }
         public string DonarName { get; set; }

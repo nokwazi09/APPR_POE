@@ -1,35 +1,76 @@
-﻿@{
+﻿@model APPR_POE.Models.AllocatingMoney
+@{
     ViewBag.Title = "AllocatingMoney";
-    Layout = "~/Views/_LayoutPage1.cshtml";
-}
+    
+      
+    }
 
+    <h2>Allocate Money</h2>
+    <h3 style="color: orangered">Available Money</h3>
+    <style>
+        body {
+            background-color: purple;
+        }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Disaster Relief Managment </title>
-</head>
-<body>
-    <h2>Allocating Money to Active Disaster</h2>
+        .form-horizontal {
+            background-color: orange;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+        }
+    </style>
+    </head>
+    <body>
+        <!-- Your existing HTML code goes here -->
+    </body>
+    </html>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-    <form id="AllocatingMoneyForm">
-        <label for="DisasterName"> Disaster Name:</label>
-        <input type="text" id="DisasterName" Name="DisasterName" required><br>
-        <label for="Amount"> Amount:</label>
-        <input type="number ">id ="Amount" Name="Amount"required><br>
-        <button type="submit">Allocate Money</button>
-    </form>
-    <Script>
-        document.getElementById('AllocatingMoneyForm').addEventListner('Submit ', function (event) {
-            event.preventDefault();
+        <div class="form-horizontal">
+            <h4>AllocateMoney</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.AllocationDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.AllocationDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.AllocationDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
 
-            const DisasterName = document.getElementById('DisasterName').Value;
-            const Amount = parseFloat(document.getElementById('Amount').Value;
+            <div class="form-group">
+                @Html.LabelFor(model => model.ALloocationAmount, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ALloocationAmount, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ALloocationAmount, "", new { @class = "text-danger" })
+                </div>
+            </div>
 
-            //clear form after submission
-            document.getElementById('DisasterName:').Value = '';
-            document.getElementById('Amount').Value = '';
-        });
-    </Script>
-</body>
-</html>
+            <div class="form-group">
+                @Html.LabelFor(model => model.DisasterId, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @if (ViewBag.DisasterList != null)
+                    {
+                        @Html.DropDownListFor(model => model.DisasterId, (SelectList)ViewBag.DisasterList, new { @class = "form-control" })
+                    }
+                    @Html.ValidationMessageFor(model => model.DisasterId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

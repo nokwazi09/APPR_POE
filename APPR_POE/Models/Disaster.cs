@@ -14,6 +14,12 @@ namespace APPR_POE.Models
     
     public partial class Disaster
     {
+        public Disaster()
+        {
+            AllocateGoods = new HashSet<AllocateGood>();
+            AllocateMoneys = new HashSet<AllocateMoney>();
+            PurchaseGoods = new HashSet<PurchaseGood>();
+        }
         public int DisasterID { get; set; }
         public string Email { get; set; }
         public Nullable<System.DateTime> Start_date { get; set; }
@@ -22,6 +28,9 @@ namespace APPR_POE.Models
         public string Description { get; set; }
         public string Aid_types { get; set; }
     
+        public virtual ICollection<AllocateGoods> AllocateGoods { get; set; }
+        public virtual ICollection<AllocateMoney> AllocateMoney{ get; set; }
+        public virtual ICollection<PurchaseGoods> PurchaseGoods { get; set; }
         public virtual UserTable UserTable { get; set; }
     }
 }

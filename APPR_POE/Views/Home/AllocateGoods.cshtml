@@ -1,0 +1,84 @@
+﻿@model APPR_POE.Models.AllocateGoods
+
+@{
+    ViewBag.Title = "AllocateGoods";
+}
+
+<h2>Allocate Goods</h2>
+<style>
+    body {
+        background-color: orange;
+    }
+
+    .form-horizontal {
+        background-color: purple;
+        padding: 20px;
+        margin: 20px;
+        border-radius: 10px;
+    }
+</style>
+</head>
+<body>
+    <!-- Your existing HTML code goes here -->
+</body>
+</html>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.DateOfAllocatioN, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DateOfAllocatioN, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DateOfAllocatioN, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NumOfItems, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NumOfItems, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NumOfItems, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DisasterId, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @if (ViewBag.DisasterList != null)
+                {
+                    @Html.DropDownListFor(model => model.DisasterId, (SelectList)ViewBag.DisasterList, new { @class = "form-control" })
+                }
+                @Html.ValidationMessageFor(model => model.DisasterId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.GoodId, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @if (ViewBag.GoodsList != null)
+                {
+                    @Html.DropDownListFor(model => model.GoodId, (SelectList)ViewBag.GoodsList, new { @class = "form-control" })
+                }
+                @Html.ValidationMessageFor(model => model.GoodId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

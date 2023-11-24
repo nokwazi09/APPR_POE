@@ -1,16 +1,29 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
-<body style="color: white;">
-    <h2>Welcome @Session["Email"]</h2>
-    <h4>In this application we will dealing with donations:</h4>
-    <p>Here is our Donations we can provide for you:</p>
+
+@model YourNamespace.DisasterReliefModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Disaster Relief Information</title>
+</head>
+<body>
+    <h1>Disaster Relief Information</h1>
+    <h2>Total Monetary Donations Received: @Model.TotalMonetaryDonations</h2>
+    <h2>Total Number of Goods Received: @Model.TotalGoodsReceived</h2>
+
+    <h3>Currently Active Disasters:</h3>
     <ul>
-        <li><a href="">Monetary Donations</a></li>
-        <li><a href="">Good Donations</a></li>
-        <li><a href="">Dister</a></li>
+        @foreach(var disaster in Model.ActiveDisasters)
+        {
+            <li>
+                <strong>@disaster.Name</strong>
+                <p>Money Allocated: @disaster.MoneyAllocated</p>
+                <p>Goods Allocated: @disaster.GoodsAllocated</p>
+            </li>
+        }
     </ul>
 </body>
-
-
+</html>

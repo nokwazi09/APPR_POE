@@ -1,23 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
-using System.Web;
-using System.Web.Helpers;
 using System.Web.Mvc;
-using System.Windows.Forms;
 using APPR_POE.Models;
-namespace APPR_POE.Controllers
+using System.Windows.Forms;
+
+namespace Part_2.Controllers
 {
     public class HomeController : Controller
     {
-        DisasterAidEntities entities = new DisasterAidEntities();
-        string conn = "Server=tcp:disasteraid.database.windows.net,1433;Initial Catalog=DisasterAid;Persist Security Info=False;User ID=admin1;Password=jORDENSEOR64;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
-
+        DjPromoWebsiteEntities entities = new DjPromoWebsiteEntities();
+        string conn = "Server=tcp:st10100228.database.windows.net,1433;Initial Catalog=DjPromoWebsite;Persist Security Info=False;User ID=djadmin;Password=Melokuhle77;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
         public ActionResult Index()
         {
+            var available = entities.MonetaryDonations.Select(m => m.Amount).Sum() - entities.AllocateMoneys.Select(a => a.ALloocationAmount).Sum() - entities.PurchaseGoods.Select(p => p.AmountOfPurchase).Sum();
+            ViewBag.Available = available;
+            var availableGoods = entities.GoodDonations.Select(m => m.NumItems).Sum() - entities.AllocateGoods.Select(s => s.NumOfItems).Sum() + entities.PurchaseGoods.Select(a => a.NumItems).Sum();
+
+            ViewBag.goodAvailable = availableGoods;
+            return View();
+        }
+
+        public ActionResult AllocationIndex()
+        {
+            var available = entities.MonetaryDonations.Select(m => m.Amount).Sum() - entities.AllocateMoneys.Select(a => a.ALloocationAmount).Sum() - entities.PurchaseGoods.Select(p => p.AmountOfPurchase).Sum();
+            ViewBag.Available = available;
+            var availableGoods = entities.GoodDonations.Select(m => m.NumItems).Sum() - entities.AllocateGoods.Select(s => s.NumOfItems).Sum() + entities.PurchaseGoods.Select(a => a.NumItems).Sum();
+            if (availableGoods == null)
+            {
+                ViewBag.goodAvailable = "No Goods Available";
+            }
+            {
+                ViewBag.goodAvailable = availableGoods;
+            }
             return View();
         }
         public ActionResult MonetaryList()
@@ -56,7 +74,7 @@ namespace APPR_POE.Controllers
                         MessageBox.Show("Saved Successfully!!!!!!");
                     }
                     con.Close();
-                    return RedirectToAction("MonetaryList", "Home");
+                    return RedirectToAction("LogIn", "Home");
                 }
 
             }
@@ -71,7 +89,10 @@ namespace APPR_POE.Controllers
             Session.Clear();
             return RedirectToAction("LogIn", "Home");
         }
-
+        public ActionResult LogIn()
+        {
+            return View();
+        }
         [HttpPost]
         public ActionResult LogIn(UserTable user)
         {
@@ -100,7 +121,7 @@ namespace APPR_POE.Controllers
 
                 using (SqlConnection con = new SqlConnection(conn))
                 {
-                    string query = "INSERT INTO MonetaryDonations(EMAILS, DONATORNAME, DATE, Amount)" +
+                    string query = "INSERT INTO MonetaryDonations(Emails, DonatorName, Date, Amount)" +
                         "VALUES (@Emails, @DonatorName, @Date, @Amount)";
                     con.Open();
                     using (SqlCommand cmd = new SqlCommand(query, con))
@@ -138,7 +159,6 @@ namespace APPR_POE.Controllers
 
             return View(dt);
         }
-
         public ActionResult AddDisaster()
         {
             return View();
@@ -178,7 +198,6 @@ namespace APPR_POE.Controllers
                 return View(ex.Message);
             }
         }
-
         public ActionResult GoodList()
         {
             DataTable dt = new DataTable();
@@ -192,8 +211,6 @@ namespace APPR_POE.Controllers
 
             return View(dt);
         }
-
-
         [HttpGet]
         public ActionResult GoodDonations()
         {
@@ -234,8 +251,6 @@ namespace APPR_POE.Controllers
                 return View(ex.Message);
             }
         }
-
-
         [HttpGet]
         public ActionResult EditMonetary(int id, MonetaryDonation monetary)
         {
@@ -498,15 +513,288 @@ namespace APPR_POE.Controllers
                 throw;
             }
         }
-        
-
-public class HomeController:Controller:Controller
-            {
-            public ActionResult AllocatingMoney()
+        //Part 2
+        public ActionResult AllocateMoney()
         {
+            var available = entities.MonetaryDonations.Select(m => m.Amount).Sum() - entities.AllocateMoneys.Select(a => a.ALloocationAmount).Sum() - entities.PurchaseGoods.Select(p => p.AmountOfPurchase).Sum();
+            ViewBag.Available = available;
+            var disasters = entities.Disasters.ToList();
+            //ViewBag.DisasterList = new SelectList(disasters, "DisasterId", "Description");
+            ViewBag.DisasterList = new SelectList(disasters, "DisasterId", "Description");
+
             return View();
         }
-            
+        [HttpPost]
+        public ActionResult AllocateMoney(AllocateMoney money)
+        {
+            var maxEndDate = entities.Disasters.Max(d => d.End_date);
+            if (money.AllocationDate < maxEndDate)
+            {
+                entities.AllocateMoneys.Add(money);
+                entities.SaveChanges();
+                TempData["Message"] = "Allocation successful"; // Provide feedback
+                return View(); // Redirect to a different view
+            }
+            else
+            {
+                ViewBag.error = "Disaster is not active";
+                return View();
+            }
+        }
+        public ActionResult AllocateGoods()
+        {
+            var availableGoods = entities.GoodDonations.Select(m => m.NumItems).Sum() - entities.AllocateGoods.Select(s => s.NumOfItems).Sum() + entities.PurchaseGoods.Select(a => a.NumItems).Sum();
+
+            ViewBag.goodAvailable = availableGoods;
+
+            var disasters = entities.Disasters.ToList();
+            var goods = entities.GoodDonations.ToList();
+            ViewBag.DisasterList = new SelectList(disasters, "DisasterId", "Description");
+            ViewBag.GoodsList = new SelectList(goods, "GoodId", "Category");
+            return View();
+        }
+        [HttpPost]
+        public ActionResult AllocateGoods(AllocateGood goods)
+        {
+            var maxDate = entities.Disasters.Max(d => d.End_date);
+            if (goods.DateOfAllocatioN < maxDate)
+            {
+                entities.AllocateGoods.Add(goods);
+                entities.SaveChanges();
+                return View();
+            }
+            else
+            {
+                ViewBag.error = "Disaster is not active";
+                return View();
+                // Handle the case where AllocationDate is not less than maxEndDate
+            }
+
+        }
+        public ActionResult PurchaseGoods()
+        {
+            var available = entities.MonetaryDonations.Select(m => m.Amount).Sum() - entities.AllocateMoneys.Select(a => a.ALloocationAmount).Sum() - entities.PurchaseGoods.Select(p => p.AmountOfPurchase).Sum();
+            ViewBag.Available = available;
+            var disasters = entities.Disasters.ToList();
+            var goods = entities.GoodDonations.ToList();
+            ViewBag.DisasterList = new SelectList(disasters, "DisasterId", "Description");
+            ViewBag.GoodsList = new SelectList(goods, "GoodId", "Category");
+            return View();
+        }
+        [HttpPost]
+        public ActionResult PurchaseGoods(PurchaseGood purchase)
+        {
+
+            entities.PurchaseGoods.Add(purchase);
+            entities.SaveChanges();
+            return View();
+
+        }
+        public ActionResult ListAllocated()
+        {
+            var available = entities.MonetaryDonations.Select(m => m.Amount).Sum() - entities.AllocateMoneys.Select(a => a.ALloocationAmount).Sum() - entities.PurchaseGoods.Select(p => p.AmountOfPurchase).Sum();
+            ViewBag.Available = available;
+            List<AllocateMoney> allocateMoneyList = new List<AllocateMoney>();
+
+            using (SqlConnection con = new SqlConnection(conn))
+            {
+                con.Open();
+                SqlDataAdapter ad = new SqlDataAdapter("SELECT a.AllocationDate, a.ALloocationAmount, di.Description\r\nFROM  AllocateMoney a, Disaster di\r\nWHERE \ta.DisasterId = di.DisasterId", con);
+
+                DataTable dt = new DataTable();
+                ad.Fill(dt);
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    AllocateMoney allocateMoney = new AllocateMoney
+                    {
+                        AllocationDate = (DateTime)row["AllocationDate"],
+                        ALlocationAmount = (decimal)row["ALlocationAmount"],
+                        Disaster = new Disaster
+                        {
+                            Description = row["Description"].ToString()
+                        }
+                    };
+
+                    allocateMoneyList.Add(allocateMoney);
+                }
+            }
+
+            return View(allocateMoneyList);
+        }
+
+        public ActionResult ListAllocatedGoods()
+        {
+            var availableGoods = entities.GoodDonations.Select(m => m.NumItems).Sum() - entities.AllocateGoods.Select(s => s.NumOfItems).Sum() + entities.PurchaseGoods.Select(a => a.NumItems).Sum();
+
+            ViewBag.goodAvailable = availableGoods;
+
+            List<AllocateGood> allocateGoodsList = new List<AllocateGood>();
+
+            using (SqlConnection con = new SqlConnection(conn))
+            {
+                con.Open();
+                SqlDataAdapter ad = new SqlDataAdapter("SELECT g.DateOfAllocation, g.NumOfItems, d.Description, o.Category\r\nFROM AllocateGoods g, Disaster d, GoodDonations o\r\nWHERE g.DisasterId = d.DisasterId\r\nAND g.GoodId = o.GoodId;", con);
+
+                DataTable dt = new DataTable();
+                ad.Fill(dt);
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    AllocateGood allocateMoney = new AllocateGood
+                    {
+                        DateOfAllocatioN = (DateTime)row["DateOfAllocation"],
+                        NumOfItems = (int)row["NumOfItems"],
+                        GetDisaster = new Disaster
+                        {
+                            Description = row["Description"].ToString()
+                        },
+                        GoodDonation = new GoodDonation
+                        {
+                            Category = row["Category"].ToString(),
+                        }
+                    };
+
+                    allocateGoodsList.Add(allocateMoney);
+                }
+            }
+
+            return View(allocateGoodsList);
+        }
+        public ActionResult ListPurchasedGoods()
+        {
+            var available = entities.MonetaryDonations.Select(m => m.Amount).Sum() - entities.AllocateMoneys.Select(a => a.ALloocationAmount).Sum() - entities.PurchaseGoods.Select(p => p.AmountOfPurchase).Sum();
+            ViewBag.Available = available;
+            List<PurchaseGoods> purchaseGood = new List<PurchaseGoods>();
+
+            using (SqlConnection con = new SqlConnection(conn))
+            {
+                con.Open();
+                SqlDataAdapter ad = new SqlDataAdapter("SELECT g.DateOfPurchase, g.AmountOfPurchase, g.NumItems, d.Description, o.Category\r\nFROM PurchaseGoods g, Disaster d, GoodDonations o\r\nWHERE g.DisasterId = d.DisasterId\r\nAND g.GoodId = o.GoodId;", con);
+
+                DataTable dt = new DataTable();
+                ad.Fill(dt);
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    PurchaseGood purchased = new PurchaseGood
+                    {
+                        DateOfPurchase = (DateTime)row["DateOfPurchase"],
+                        AmountOfPurchase = (decimal)row["AmountOfPurchase"],
+                        NumItems = (int)row["NumItems"],
+                        GetDisaster = new Disaster
+                        {
+                            Description = row["Description"].ToString()
+                        },
+                        GoodDonation = new GoodDonation
+                        {
+                            Category = row["Category"].ToString(),
+                        }
+                    };
+
+                    purchaseGood.Add(purchased);
+                }
+            }
+
+            return View(purchaseGood);
+        }
 
     }
+
+    internal class AllocateGood
+    {
+        public DateTime DateOfAllocatioN { get; internal set; }
+        public int NumOfItems { get; internal set; }
+        public Disaster GetDisaster { get; internal set; }
+        public GoodDonation GoodDonation { get; internal set; }
+    }
+
+    internal class PurchaseGood
+    {
+        internal Disaster GetDisaster;
+
+        public GoodDonation GoodDonation { get; internal set; }
+        public DateTime DateOfPurchase { get; internal set; }
+        public decimal AmountOfPurchase { get; internal set; }
+        public int NumItems { get; internal set; }
+    }
+
+    internal class DjPromoWebsiteEntities
+    {
+        internal IEnumerable<object> MonetaryDonations;
+
+        public IEnumerable<object> GoodDonations { get; internal set; }
+        public IEnumerable<object> AllocateGoods { get; internal set; }
+        public IEnumerable<object> PurchaseGoods { get; internal set; }
+    }
+
+    internal class AllocateMoney
+    {
+        public decimal ALlocationAmount { get; internal set; }
+        public DateTime AllocationDate { get; internal set; }
+        public Disaster Disaster { get; internal set; }
+    }
+
+    internal class PurchaseGoods
+    {
+    }
 }
+//Part3 
+
+
+
+public class DisasterReliefController : Controller
+{
+    public ActionResult Index()
+    {
+        // Retrieve data for the view
+        var model = new DisasterReliefModel
+        {
+            TotalMonetaryDonations = 50000.00m,
+            TotalGoodsReceived = 1000,
+            ActiveDisasters = new List<ActiveDisaster>
+            {
+                new ActiveDisaster { Name = "Hurricane", MoneyAllocated = 20000.00m, GoodsAllocated = 500 },
+                new ActiveDisaster { Name = "Flood", MoneyAllocated = 30000.00m, GoodsAllocated = 500 }
+            }
+        };
+
+        return View(model);
+    }
+}
+    
+        
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  

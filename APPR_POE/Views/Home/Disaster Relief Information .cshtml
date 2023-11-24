@@ -1,0 +1,141 @@
+﻿ namespace APPR_POE.Views.Home
+
+@{
+    ViewBag.Title = "Disaster Relief Information";
+    Layout = "~/Views/_LayoutPage1.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: mediumpurple;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: orange;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        label.radio-label {
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+            label.radio-label:hover {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+        #DonatorName {
+            display: none;
+        }
+
+        .form-group button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            .form-group button:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>@ViewBag.Title</h2>
+        html
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Disaster Relief Information</title>
+        </head>
+        <body>
+            <h1>Disaster Relief Information</h1>
+            <h2>Total Monetary Donations Received: @Model.TotalMonetaryDonations</h2>
+            <h2>Total Number of Goods Received: @Model.TotalGoodsReceived</h2>
+
+            <h3>Currently Active Disasters:</h3>
+            <ul>
+                @foreach (var disaster in Model.ActiveDisasters)
+                {
+                    <li>
+                        <strong>@disaster.Name</strong>
+                        <p>Money Allocated: @disaster.MoneyAllocated</p>
+                        <p>Goods Allocated: @disaster.GoodsAllocated</p>
+                    </li>
+                }
+            </ul>
+
+            <!-- Add sign up for alerts form -->
+            <form action="/signup" method="post">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+                <input type="submit" value="Sign Up for Alerts">
+            </form>
+
+            <!-- Add map feature -->
+            <div id="map">
+                <!-- Map code goes here -->
+            </div>
+
+            <!-- Add donation tracking feature -->
+            <h3>Track Your Donations</h3>
+            <p>Enter your donation ID to track the impact of your contribution:</p>
+            <form action="/trackdonation" method="post">
+                <input type="text" id="donationId" name="donationId">
+                <input type="submit" value="Track Donation">
+            </form>
+        </body>
+    </html>

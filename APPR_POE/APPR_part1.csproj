@@ -135,6 +135,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DisasterReliefModel.cs" />
     <Compile Include="Models\Disaster.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -176,8 +177,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="img\log.svg" />
-    <Content Include="img\register.svg" />
     <Content Include="js\app.js" />
     <Content Include="Models\Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -252,9 +251,13 @@
     <Content Include="Views\Home\SignUp.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\AllocatingMoney.cshtml" />
+    <Content Include="Views\Home\AllocateGoods.cshtml" />
+    <Content Include="Views\Home\PurchaseGoods.cshtml" />
+    <Content Include="Views\Home\Disaster Relief Information .cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="img\" />
     <Folder Include="Views\Update_Delete_Details\" />
   </ItemGroup>
   <ItemGroup>
